@@ -21,10 +21,13 @@
             };
         },
         handleEvent: function (evt) {
+            console.log("Event found: "+evt.type);
             switch (evt.type) {
                 case 'mozChromeEvent':
                     if (evt.detail.type === 'desktop-notification') {
                         console.log("Notification Reader: notification found.");
+                        var msg = new SpeechSynthesisUtterance('Hello World');
+                        window.speechSynthesis.speak(msg);
                     }
                     break;
 
@@ -36,7 +39,15 @@
         initialize: function initialize() {
             var that = this;
             this.notify('Notifications Reader: ', "http://www.twitter.com/codingfree", null, true);
-            window.addEventListener('mozChromeEvent', this.handleEvent);
+            if(window.speechSynthesis){
+                console.log("It has sppech syntehsis capabilities, proceed.");
+                var msg = new SpeechSynthesisUtterance('Notification Reader enabled!');
+                //window.speechSynthesis.speak(msg);
+                
+                window.addEventListener('mozChromeEvent', this.handleEvent);
+                
+            }
+
         }
     }
 
