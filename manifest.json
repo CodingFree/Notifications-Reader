@@ -1,0 +1,30 @@
+{
+    "manifest_version": 2,
+    "version": "1.0",
+    "name": "Notifications Reader",
+    "description": "Notifications Reader for your Firefox OS",
+    "author": "Adrian Crespo",
+    "role": "addon",
+    "type": "certified",
+    "content_scripts": [
+        {
+            "matches": [
+                "app://system.gaiamobile.org/index.html"
+            ],
+            "js": [
+                "scripts/main.js"
+            ]
+        }
+    ],
+    "icons": {
+        "640": "/style/icons/640.png",
+        "512": "/style/icons/512.png",
+        "256": "/style/icons/256.png",
+        "128": "/style/icons/128.png",
+        "90": "/style/icons/90.png",
+        "64": "/style/icons/64.png",
+        "48": "/style/icons/48.png",
+        "32": "/style/icons/32.png",
+        "16": "/style/icons/16.png"
+    }
+}
