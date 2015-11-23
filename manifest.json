@@ -12,7 +12,7 @@
                 "app://system.gaiamobile.org/index.html"
             ],
             "js": [
-                "scripts/main.js"
+                "scripts/notiReader.js"
             ]
         }
     ],
