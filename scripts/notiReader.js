@@ -1,7 +1,6 @@
 (function () {
     var notifReader = {
         notify: function (titleid, body, bodyid, onClick) {
-            console.log("A notification would be send: " + titleid);
             var notification = new window.Notification(titleid, {
                 body: body,
                 icon: 'https://codingfree.com/nr_32.png'
@@ -21,18 +20,21 @@
             };
         },
         handleEvent: function (evt) {
-            console.log("Event found: "+evt.type);
             switch (evt.type) {
-                case 'mozChromeEvent':
+                case 'mozChromeNotificationEvent':
                     if (evt.detail.type === 'desktop-notification') {
-                        console.log("Notification Reader: notification found.");
-                        var msg = new SpeechSynthesisUtterance('Hello World');
-                        window.speechSynthesis.speak(msg);
+                        setTimeout(function(){
+                            var msg = new SpeechSynthesisUtterance(evt.detail.title);
+                            window.speechSynthesis.speak(msg);
+                        },1000); 
+                        setTimeout(function(){
+                            msg = new SpeechSynthesisUtterance(evt.detail.text);
+                            window.speechSynthesis.speak(msg);
+                        },3000);                            
                     }
                     break;
 
                 default:
-                    console.debug('Unhandled event: ' + evt.type);
                     break;
             }
         },
@@ -40,12 +42,8 @@
             var that = this;
             this.notify('Notifications Reader: ', "http://www.twitter.com/codingfree", null, true);
             if(window.speechSynthesis){
-                console.log("It has sppech syntehsis capabilities, proceed.");
-                var msg = new SpeechSynthesisUtterance('Notification Reader enabled!');
-                //window.speechSynthesis.speak(msg);
-                
-                window.addEventListener('mozChromeEvent', this.handleEvent);
-                
+                var msg = new SpeechSynthesisUtterance('Notification Reader enabled!');                
+                window.addEventListener('mozChromeNotificationEvent', this.handleEvent);
             }
 
         }
