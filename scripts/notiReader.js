@@ -42,8 +42,19 @@
             var that = this;
             this.notify('Notifications Reader: ', "http://www.twitter.com/codingfree", null, true);
             if(window.speechSynthesis){
-                var msg = new SpeechSynthesisUtterance('Notification Reader enabled!');                
+                var msg = new SpeechSynthesisUtterance('Notification Reader enabled!');
+                window.speechSynthesis.speak(msg);               
                 window.addEventListener('mozChromeNotificationEvent', this.handleEvent);
+                navigator.mozApps.mgmt.addEventListener('enabledstatechange', function(event) {
+                    var app = event.application;
+                    var wasEnabled = app.enabled;
+                    if(!wasEnabled){
+                        var msg = new SpeechSynthesisUtterance('Notification Reader disxabled!');
+                        window.speechSynthesis.speak(msg);              
+                        window.removeEventListener('mozChromeNotificationEvent', this.handleEvent);
+                    }
+                });
+
             }
 
         }
