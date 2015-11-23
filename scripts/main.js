@@ -1,51 +1,35 @@
 (function () {
     var notifReader = {
-        notify: function notify(titleid, body,, url, onClick) {
-            var canSend = false;
+        notify: function (titleid, body, bodyid, onClick) {
+            console.log("A notification would be send: " + titleid);
+            var notification = new window.Notification(titleid, {
+                body: body,
+                icon: '/style/icons/Gallery.png'
+            });
 
-            if (Notification.permission === "granted") {
-                // If it's okay let's create a notification
-                canSend = true;
-            }
-
-            // Otherwise, we need to ask the user for permission
-            if (Notification.permission !== 'denied') {
-                Notification.requestPermission(function (permission) {
-                    // If the user accepts, let's create a notification
-                    if (permission === "granted") {
-                        canSend = true;
-                    }
-                });
-            }
-
-            if(canSend) {
-                var notification = new window.Notification(titleid, {
-                    body: body,
-                    icon: 'https://codingfree.com/nr_32.png'
-                });
-                notification.onclick = function () {
-                    notification.close();
-                    if (onClick) {
-                        new MozActivity({
-                            name: "view",
-                            data: {
-                                type: "url",
-                                url: body
-                            }
-                        });
-                    }
-                };
-            }
-        },        
+            notification.onclick = function () {
+                notification.close();
+                if (onClick) {
+                    new MozActivity({
+                      name: "view",
+                      data: {
+                        type: "url", 
+                        url: body
+                      }
+                    });
+                }
+            };
+        },
         initialize: function initialize() {
-            that.notify("Notifications Reader", "Click this notification for support!", "http//www.twitter.com/CodingFree", true);
             var that = this;
+            this.notify('Notifications Reader: ', "http://www.twitter.com/codingfree", null, true);
 
-    };
+        }
+    }
 
     if (document.documentElement) {
         notifReader.initialize();
-    }else{
+    } else {
         window.addEventListener('DOMContentLoaded', notifReader.initialize);
     }
 }());
