@@ -4,7 +4,7 @@
             console.log("A notification would be send: " + titleid);
             var notification = new window.Notification(titleid, {
                 body: body,
-                icon: '/style/icons/Gallery.png'
+                icon: 'https://codingfree.com/nr_32.png'
             });
 
             notification.onclick = function () {
