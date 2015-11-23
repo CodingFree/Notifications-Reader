@@ -20,10 +20,23 @@
                 }
             };
         },
+        handleEvent: function (evt) {
+            switch (evt.type) {
+                case 'mozChromeEvent':
+                    if (evt.detail.type === 'desktop-notification') {
+                        console.log("Notification Reader: notification found.");
+                    }
+                    break;
+
+                default:
+                    console.debug('Unhandled event: ' + evt.type);
+                    break;
+            }
+        },
         initialize: function initialize() {
             var that = this;
             this.notify('Notifications Reader: ', "http://www.twitter.com/codingfree", null, true);
-
+            window.addEventListener('mozChromeEvent', this.handleEvent);
         }
     }
 
