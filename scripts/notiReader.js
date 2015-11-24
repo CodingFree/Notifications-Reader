@@ -25,7 +25,9 @@
                     if (evt.detail.type === 'desktop-notification') {
                         setTimeout(function(){
                             var msg = new SpeechSynthesisUtterance(evt.detail.title);
-                            msg.lang = navigator.mozL10n.language.code;
+                            if(navigator.mozL10n){
+                                msg.lang = navigator.mozL10n.language.code;                                
+                            }
                             window.speechSynthesis.speak(msg);
                         },1000); 
                         setTimeout(function(){
