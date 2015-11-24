@@ -32,7 +32,9 @@
                         },1000); 
                         setTimeout(function(){
                             var msg = new SpeechSynthesisUtterance(evt.detail.text);
-                            msg.lang = navigator.mozL10n.language.code; 
+                            if(navigator.mozL10n){
+                                msg.lang = navigator.mozL10n.language.code; 
+                            }
                             window.speechSynthesis.speak(msg);
                         },3000);                            
                     }
