@@ -25,10 +25,12 @@
                     if (evt.detail.type === 'desktop-notification') {
                         setTimeout(function(){
                             var msg = new SpeechSynthesisUtterance(evt.detail.title);
+                            msg.lang = navigator.mozL10n.language.code;
                             window.speechSynthesis.speak(msg);
                         },1000); 
                         setTimeout(function(){
-                            msg = new SpeechSynthesisUtterance(evt.detail.text);
+                            var msg = new SpeechSynthesisUtterance(evt.detail.text);
+                            msg.lang = navigator.mozL10n.language.code; 
                             window.speechSynthesis.speak(msg);
                         },3000);                            
                     }
@@ -43,6 +45,7 @@
             this.notify('Notifications Reader: ', "http://www.twitter.com/codingfree", null, true);
             if(window.speechSynthesis){
                 var msg = new SpeechSynthesisUtterance('Notification Reader enabled!');
+                msg.lang = "en-US"; 
                 window.speechSynthesis.speak(msg);               
                 window.addEventListener('mozChromeNotificationEvent', this.handleEvent);
                 navigator.mozApps.mgmt.addEventListener('enabledstatechange', function(event) {
@@ -50,11 +53,14 @@
                     var wasEnabled = app.enabled;
                     if(!wasEnabled){
                         var msg = new SpeechSynthesisUtterance('Notification Reader disxabled!');
-                        window.speechSynthesis.speak(msg);              
+                        msg.lang = "en-US";            
+                        window.speechSynthesis.speak(msg);  
                         window.removeEventListener('mozChromeNotificationEvent', this.handleEvent);
                     }
                 });
 
+            }else{
+                window.alert("Sorry, your device does not support the Speech API.");
             }
 
         }
