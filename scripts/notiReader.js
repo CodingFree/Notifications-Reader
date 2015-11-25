@@ -25,6 +25,8 @@
                 msg.lang = lang;
             }else if(navigator.mozL10n){
                 msg.lang = navigator.mozL10n.language.code; 
+            }else if(navigator.language){
+                msg.lang = navigator.language;
             }else{
                 msg.lang = "en-US";
             }        
@@ -50,7 +52,7 @@
         },
         multipleInjections: function(){
             if (document.querySelector('.fxos-notifReader')) {
-                this.notify('Notifications Reader: ', "Multiple Injections detected", null, false);
+                console.log('Notifications Reader: Multiple Injections detected');
                 return;
             }else{
                 //Add the fxos-notifReader class to disable injections.
