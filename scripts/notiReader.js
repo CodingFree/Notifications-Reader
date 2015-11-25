@@ -6,7 +6,7 @@
                 icon: 'https://codingfree.com/nr_32.png'
             });
 
-            notification.onclick = function () {
+            notification.onclick = function(){
                 notification.close();
                 if (onClick) {
                     new MozActivity({
@@ -19,24 +19,23 @@
                 }
             };
         },
-        handleEvent: function (evt) {
+        talk: function (text, lang){
+            var msg = new SpeechSynthesisUtterance(text);
+            if(lang){
+                msg.lang = lang;
+            }else if(navigator.mozL10n){
+                msg.lang = navigator.mozL10n.language.code; 
+            }else{
+                msg.lang = "en-US";
+            }        
+            window.speechSynthesis.speak(msg); 
+        },
+        handleEvent: function(evt){
             switch (evt.type) {
                 case 'mozChromeNotificationEvent':
                     if (evt.detail.type === 'desktop-notification') {
-                        setTimeout(function(){
-                            var msg = new SpeechSynthesisUtterance(evt.detail.title);
-                            if(navigator.mozL10n){
-                                msg.lang = navigator.mozL10n.language.code;                                
-                            }
-                            window.speechSynthesis.speak(msg);
-                        },1000); 
-                        setTimeout(function(){
-                            var msg = new SpeechSynthesisUtterance(evt.detail.text);
-                            if(navigator.mozL10n){
-                                msg.lang = navigator.mozL10n.language.code; 
-                            }
-                            window.speechSynthesis.speak(msg);
-                        },3000);                            
+                            this.talk(evt.detail.title, null);
+                            this.talk(evt.detail.text, null);                         
                     }
                     break;
 
@@ -44,27 +43,45 @@
                     break;
             }
         },
+        multipleInjections: function(){
+            if (document.querySelector('.fxos-notifReader')) {
+                this.notify('Notifications Reader: ', "Multiple Injections detected", null, false);
+                return;
+            }else{
+                //Add the fxos-notifReader class to disable injections.
+                var body = document.querySelector('body');
+                var fxosNotifReader = document.createElement('div');
+                fxosNotifReader.classList.add('fxos-notifReader');
+                body.appendChild(fxosNotifReader);
+
+                this.talk("Notification Reader enabled!", "en-US");             
+                window.addEventListener('mozChromeNotificationEvent', this.handleEvent);
+            }
+        },
+        checkDisabled: function(){
+            navigator.mozApps.mgmt.addEventListener('enabledstatechange', function(event) {
+                var app = event.application;
+                var wasEnabled = app.enabled;
+                if(!wasEnabled){
+                    this.talk("Notification Reader disabled", "en-US");
+                    window.removeEventListener('mozChromeNotificationEvent', this.handleEvent);
+
+                    //Remove the fxos-notifReader class to enable injections.
+                    if(fxosNotifReader){
+                        var body = document.querySelector('body');
+                        var fxosNotifReader = body.getElementsByClassName("fxos-notifReader");
+                        fxosNotifReader.parentNode.removeChild(fxosNotifReader);
+                    }
+                }
+            });
+        },
         initialize: function initialize() {
-            var that = this;
             this.notify('Notifications Reader: ', "http://www.twitter.com/codingfree", null, true);
             if(window.speechSynthesis){
-                var msg = new SpeechSynthesisUtterance('Notification Reader enabled!');
-                msg.lang = "en-US"; 
-                window.speechSynthesis.speak(msg);               
-                window.addEventListener('mozChromeNotificationEvent', this.handleEvent);
-                navigator.mozApps.mgmt.addEventListener('enabledstatechange', function(event) {
-                    var app = event.application;
-                    var wasEnabled = app.enabled;
-                    if(!wasEnabled){
-                        var msg = new SpeechSynthesisUtterance('Notification Reader disxabled!');
-                        msg.lang = "en-US";            
-                        window.speechSynthesis.speak(msg);  
-                        window.removeEventListener('mozChromeNotificationEvent', this.handleEvent);
-                    }
-                });
-
+                this.multipleInjections();
+                this.checkDisabled();
             }else{
-                window.alert("Sorry, your device does not support the Speech API.");
+                ehis.notify('Notifications Reader: ', "Sorry, your device does not support the Speech API.");
             }
 
         }
