@@ -34,8 +34,13 @@
             switch (evt.type) {
                 case 'mozChromeNotificationEvent':
                     if (evt.detail.type === 'desktop-notification') {
-                            this.talk(evt.detail.title, null);
-                            this.talk(evt.detail.text, null);                         
+                        var that = this;
+                        setTimeout(function(){                         
+                            that.talk(evt.detail.title, null);
+                        },1000);
+                    setTimeout(function(){                                                   
+                            that.talk(evt.detail.text, null);
+                        },3000);                                                     
                     }
                     break;
 
@@ -54,17 +59,19 @@
                 fxosNotifReader.classList.add('fxos-notifReader');
                 body.appendChild(fxosNotifReader);
 
-                this.talk("Notification Reader enabled!", "en-US");             
-                window.addEventListener('mozChromeNotificationEvent', this.handleEvent);
+                this.talk("Notification Reader enabled!", "en-US");
+                this.notify('Notifications Reader: ', "http://www.twitter.com/codingfree", null, true);             
+                window.addEventListener('mozChromeNotificationEvent', this.handleEvent.bind(this));
             }
         },
         checkDisabled: function(){
+            var that = this;
             navigator.mozApps.mgmt.addEventListener('enabledstatechange', function(event) {
                 var app = event.application;
                 var wasEnabled = app.enabled;
                 if(!wasEnabled){
-                    this.talk("Notification Reader disabled", "en-US");
-                    window.removeEventListener('mozChromeNotificationEvent', this.handleEvent);
+                    that.talk("Notification Reader disabled", "en-US");
+                    window.removeEventListener('mozChromeNotificationEvent', that.handleEvent.bind(that));
 
                     //Remove the fxos-notifReader class to enable injections.
                     if(fxosNotifReader){
@@ -76,7 +83,6 @@
             });
         },
         initialize: function initialize() {
-            this.notify('Notifications Reader: ', "http://www.twitter.com/codingfree", null, true);
             if(window.speechSynthesis){
                 this.multipleInjections();
                 this.checkDisabled();
@@ -90,6 +96,6 @@
     if (document.documentElement) {
         notifReader.initialize();
     } else {
-        window.addEventListener('DOMContentLoaded', notifReader.initialize);
+        window.addEventListener('DOMContentLoaded', notifReader.initialize.bind(this));
     }
 }());
