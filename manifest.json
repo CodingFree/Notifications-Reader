@@ -4,8 +4,6 @@
     "name": "Notifications Reader",
     "description": "Notifications Reader for your Firefox OS",
     "author": "Adrian Crespo",
-    "role": "addon",
-    "type": "certified",
     "content_scripts": [
         {
             "matches": [
