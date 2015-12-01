@@ -1,3 +1,5 @@
+"use strict";
+
 (function () {
     var notifReader = {
         notify: function (titleid, body, bodyid, onClick) {
