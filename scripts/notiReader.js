@@ -1,9 +1,9 @@
 "use strict";
 
 (function () {
-    var notifReader = {
+    let notifReader = {
         notify: function (titleid, body, bodyid, onClick) {
-            var notification = new window.Notification(titleid, {
+            let notification = new window.Notification(titleid, {
                 body: body,
                 icon: 'https://codingfree.com/nr_32.png'
             });
@@ -22,7 +22,7 @@
             };
         },
         talk: function (text, lang){
-            var msg = new SpeechSynthesisUtterance(text);
+            let msg = new SpeechSynthesisUtterance(text);
             if(lang){
                 msg.lang = lang;
             }else if(navigator.mozL10n){
@@ -38,7 +38,7 @@
             switch (evt.type) {
                 case 'mozChromeNotificationEvent':
                     if (evt.detail.type === 'desktop-notification') {
-                        var that = this;
+                        let that = this;
                         setTimeout(function(){                         
                             that.talk(evt.detail.title, null);
                         },1000);
@@ -58,8 +58,8 @@
                 return;
             }else{
                 //Add the fxos-notifReader class to disable injections.
-                var body = document.querySelector('body');
-                var fxosNotifReader = document.createElement('div');
+                let body = document.querySelector('body');
+                let fxosNotifReader = document.createElement('div');
                 fxosNotifReader.classList.add('fxos-notifReader');
                 body.appendChild(fxosNotifReader);
 
@@ -69,18 +69,18 @@
             }
         },
         checkDisabled: function(){
-            var that = this;
+            let that = this;
             navigator.mozApps.mgmt.addEventListener('enabledstatechange', function(event) {
-                var app = event.application;
-                var wasEnabled = app.enabled;
+                let app = event.application;
+                let wasEnabled = app.enabled;
                 if(!wasEnabled){
                     that.talk("Notification Reader disabled", "en-US");
                     window.removeEventListener('mozChromeNotificationEvent', that.handleEvent.bind(that));
 
                     //Remove the fxos-notifReader class to enable injections.
                     if(fxosNotifReader){
-                        var body = document.querySelector('body');
-                        var fxosNotifReader = body.getElementsByClassName("fxos-notifReader");
+                        let body = document.querySelector('body');
+                        let fxosNotifReader = body.getElementsByClassName("fxos-notifReader");
                         fxosNotifReader.parentNode.removeChild(fxosNotifReader);
                     }
                 }
